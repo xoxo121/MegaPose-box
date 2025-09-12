@@ -52,6 +52,7 @@ dependencies:
       - ipykernel
       - scipy
       - pypng
+      - natsort
       - h5py 
       - seaborn
       - kornia 

@@ -5,11 +5,11 @@ import os
 from pathlib import Path
 from typing import List, Tuple, Union
 
-# Third Party
+# Third Party 
 import numpy as np
 from bokeh.io import export_png
 from bokeh.plotting import gridplot
-from PIL import Image
+from PIL import Image 
 
 # MegaPose
 from megapose.config import LOCAL_DATA_DIR
@@ -39,7 +39,15 @@ def load_observation(
 ) -> Tuple[np.ndarray, Union[None, np.ndarray], CameraData]:
     camera_data = CameraData.from_json((example_dir / "camera_data.json").read_text())
 
-    rgb = np.array(Image.open(example_dir / "image_rgb.png"), dtype=np.uint8)
+    rgb_path = example_dir / "image_rgb.png"
+    if not rgb_path.exists():
+        rgb_path = example_dir / "image_rgb.jpg"
+
+    rgb_pil = Image.open(rgb_path)
+    if rgb_pil.size != camera_data.resolution[::-1]:
+        rgb_pil = rgb_pil.resize(camera_data.resolution[::-1], Image.Resampling.LANCZOS)
+
+    rgb = np.array(rgb_pil, dtype=np.uint8)
     assert rgb.shape[:2] == camera_data.resolution
 
     depth = None
@@ -211,9 +219,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("example_name")
     parser.add_argument("--model", type=str, default="megapose-1.0-RGB-multi-hypothesis")
-    parser.add_argument("--vis-detections", action="store_true")
-    parser.add_argument("--run-inference", action="store_true")
-    parser.add_argument("--vis-outputs", action="store_true")
+    parser.add_argument("--vis-detections", action="store_true", default=True)
+    parser.add_argument("--run-inference", action="store_true", default=True)
+    parser.add_argument("--vis-outputs", action="store_true", default=True)
     args = parser.parse_args()
 
     example_dir = LOCAL_DATA_DIR / "examples" / args.example_name
