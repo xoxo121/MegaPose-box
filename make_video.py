@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import argparse, cv2, os
 from pathlib import Path
-from natsort import natsorted  # pip install natsort
+from natsort import natsorted
 
 def pad_to_size(img, size):
     H, W = size

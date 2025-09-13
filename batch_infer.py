@@ -15,11 +15,9 @@ from PIL import Image
 import logging
 import torch, gc
 
-# ---- Off-screen rendering before any MegaPose imports ----
 os.environ.setdefault("PANDA_OFFSCREEN", "1")
 os.environ.setdefault("PYOPENGL_PLATFORM", "egl")
 
-# ---- MegaPose Imports ----
 from megapose.datasets.object_dataset import RigidObject, RigidObjectDataset
 from megapose.datasets.scene_dataset import CameraData, ObjectData
 from megapose.inference.types import ObservationTensor
@@ -37,15 +35,15 @@ from bokeh.plotting import gridplot
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("megapose-batch")
 
-# ============== USER SETTINGS ==============
-EXAMPLE = "bot"                      # folder under $MEGAPOSE_DATA_DIR/examples
-IMAGES_SUB = "images"                # subfolder with frames
-MODEL = "megapose-1.0-RGB-multi-hypothesis"           # lighter single-hypothesis model
-FIXED_BBOX = [0, 0, 960, 443]      # [xmin, ymin, xmax, ymax] for ALL frames
-SKIP_VISUALS = False                 # set True to skip overlay PNGs
-LABEL = "bot"                        # must match meshes/<LABEL>
+
+EXAMPLE = "bot"                  
+IMAGES_SUB = "images"             
+MODEL = "megapose-1.0-RGB-multi-hypothesis"          
+FIXED_BBOX = [0, 0, 960, 443]     
+SKIP_VISUALS = False                 
+LABEL = "bot"                       
 MAX_WIDTH = None                   
-# ===========================================
+
 
 def scale_K(K, old_hw, new_hw):
     """Rescale intrinsics when resolution changes."""
@@ -60,7 +58,6 @@ def scale_K(K, old_hw, new_hw):
     ])
 
 def maybe_downscale(rgb: np.ndarray) -> tuple[np.ndarray, float]:
-    """Downscale image if wider than MAX_WIDTH. Returns (rgb_new, scale)."""
     if not MAX_WIDTH:
         return rgb, 1.0
     h, w = rgb.shape[:2]
@@ -99,7 +96,7 @@ def main():
     if not images:
         raise RuntimeError(f"No images found in {frames}")
 
-    # ---- Initialize model and renderer once ----
+    # Initialize model and renderer once
     logger.info(f"Loading mesh from: {mesh_dir}")
     obj_path = mesh_dir / LABEL / "model.obj"
     if not obj_path.exists():
@@ -155,7 +152,7 @@ def main():
         (out_dir / "object_data.json").write_text(json.dumps([d.to_json() for d in pred_data]))
         logger.info(f"Saved predictions to {out_dir}")
 
-        # Visualization (safe)
+        # Visualization
         if not SKIP_VISUALS and renderer:
             try:
                 vis_dir = out_root / stem / "visualizations"
@@ -191,7 +188,7 @@ def main():
         torch.cuda.empty_cache()
         gc.collect()
 
-    print(f"\n✓ Done. Results in: {out_root}")
+    print(f"\n Done. Results in: {out_root}")
     print("Each frame folder contains outputs/object_data.json and visualizations/*")
 
 if __name__ == "__main__":

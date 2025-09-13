@@ -31,7 +31,6 @@ def _run_module_or_subprocess(module_name: str, script_path: Path, argv: list[st
 
 
 def extract_frames_ffmpeg_or_cv(video_path: Path, images_dir: Path, num_frames: int = 900):
-    """Extract exactly `num_frames` frames. Prefer ffmpeg; fall back to OpenCV."""
     images_dir.mkdir(parents=True, exist_ok=True)
     # Prefer ffmpeg (faster, preserves quality)
     try:
@@ -72,9 +71,6 @@ def run_megapose_batch_infer(megapose_root: Path):
     _run_module_or_subprocess("batch_infer", script, [])
 
 def run_overlay(examples_dir: Path, label: str = "bot", mesh_units: str = "mm", megapose_root: Optional[Path] = None):
-    """
-    Calls overlay_mesh_bbox_from_obj.py with the right args.
-    """
     search_dir = Path.cwd()
     script = search_dir / "overlay_mesh_bbox_from_obj.py"
     module_name = "overlay_mesh_bbox_from_obj"
@@ -84,9 +80,6 @@ def run_overlay(examples_dir: Path, label: str = "bot", mesh_units: str = "mm", 
     _run_module_or_subprocess(module_name, script, argv)
 
 def run_make_video(outputs_root: Path, out_video: Path, fps: int = 12, size: Optional[str] = None, megapose_root: Optional[Path] = None):
-    """
-    Calls make_video.py with the right args.
-    """
     search_dir = Path.cwd()
     script = search_dir / "make_video.py"
     module_name = "make_video"
@@ -134,7 +127,7 @@ def main():
     size = args.size  
     run_make_video(outputs_root, final_video, fps=args.fps, size=size, megapose_root=megapose_root)
 
-    print(f"\n✓ Pipeline complete.\n  Frames: {images_dir}\n  Poses:  {outputs_root}/*/outputs/object_data.json\n  Video:  {final_video}")
+    print(f"\n Pipeline complete.\n  Frames: {images_dir}\n  Poses:  {outputs_root}/*/outputs/object_data.json\n  Video:  {final_video}")
 
 if __name__ == "__main__":
     main()
