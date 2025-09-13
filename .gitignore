@@ -22,3 +22,4 @@ tmp/
 *tmp/
 tests.sh
 rclone.conf
+*.pt
