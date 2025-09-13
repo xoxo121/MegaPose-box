@@ -1,21 +1,5 @@
 #!/usr/bin/env python3
-"""
-Lite tracker for per-frame bboxes:
-- Manual ROI on first frame
-- OpenCV KCF tracker every frame (CPU, fast)
-- YOLO on a *cropped region* around last box every N frames or on tracker failure
-- Outputs MegaPose-compatible dets/bboxes.json
 
-Usage:
-  python3 moving_bbox_lite.py \
-    --megapose_data_dir /home/nahar3/megapose_data \
-    --example_name bot \
-    --yolo_model yolov8n.pt \
-    --imgsz 320 --detect_every 10 \
-    --device 0 --show
-
-If GPU OOM persists, add: --device cpu  (or lower --imgsz)
-"""
 import os, json, argparse
 from pathlib import Path
 from typing import List, Dict

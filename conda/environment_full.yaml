@@ -53,6 +53,7 @@ dependencies:
       - scipy
       - pypng
       - natsort
+      - ultralytics
       - h5py 
       - seaborn
       - kornia 
