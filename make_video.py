@@ -65,7 +65,7 @@ def main():
             print(f"  {i}/{len(frames)}")
 
     vw.release()
-    print("✓ Done:", args.out)
+    print(" Done:", args.out)
 
 if __name__ == "__main__":
     main()

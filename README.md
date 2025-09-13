@@ -367,6 +367,31 @@ $MEGAPOSE_DATA_DIR/
 You can then run the notebook [`megapose_estimator_visualization.ipynb`](notebooks/megapose_estimator_visualization.ipynb). This will run the inference code on a test image from YCBV and visualize the intermediate results.
 </details>
 
+# MegaPose Inference Pipeline for Videos
+
+This repository contains scripts to run MegaPose inference on a video file, generate 3D bounding box overlays, and create a new video with the results.
+
+## New Scripts
+
+The following scripts have been added to enable this functionality:
+
+-   `pipeline_from_video.py`: This is the main script that orchestrates the entire pipeline. It takes a video file as input, extracts frames, runs MegaPose inference, overlays the resulting 3D bounding boxes, and creates a final video.
+-   `batch_infer.py`: This script runs batch inference on a directory of images. It is called by `pipeline_from_video.py` to process the extracted video frames.
+-   `overlay_mesh_bbox_from_obj.py`: This script takes the output of the inference and overlays the 3D bounding boxes of the detected objects onto the corresponding images.
+-   `make_video.py`: This script compiles the images with the 3D bounding box overlays into a single video file.
+
+## Usage
+
+To run the full pipeline, you can execute the `pipeline_from_video.py` script. You will need to provide the path to your input video and specify the directories for your MegaPose data and the MegaPose installation.
+
+```bash
+python pipeline_from_video.py \
+    --video /path/to/your/video.mp4 \
+    --megapose_root /path/to/your/megapose6d \
+    --megapose_data_dir /path/to/your/megapose_data \
+    --example_name <your_object_name>
+```
+
 # Dev Ops
 <details>
 <summary>Click for details...</summary>

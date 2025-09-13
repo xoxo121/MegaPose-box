@@ -114,17 +114,17 @@ def main():
 
     os.environ["MEGAPOSE_DATA_DIR"] = str(data_root)
 
-    print(f"[1/4] Extracting {args.num_frames} frames from {args.video} -> {images_dir}")
+    print(f" Extracting {args.num_frames} frames from {args.video} -> {images_dir}")
     extract_frames_ffmpeg_or_cv(Path(args.video), images_dir, num_frames=args.num_frames)
 
-    print(f"[2/4] Running MegaPose batch inference from {megapose_root}")
+    print(f" Running MegaPose batch inference from {megapose_root}")
     run_megapose_batch_infer(megapose_root)
 
-    print(f"[3/4] Overlaying 3D bbox on frames under {outputs_root}")
+    print(f" Overlaying 3D bbox on frames under {outputs_root}")
     run_overlay(examples_dir, label=args.example_name, mesh_units=args.mesh_units, megapose_root=megapose_root)
 
-    print(f"[4/4] Building final video -> {final_video}")
-    size = args.size  
+    print(f" Building final video -> {final_video}")
+    size = args.size
     run_make_video(outputs_root, final_video, fps=args.fps, size=size, megapose_root=megapose_root)
 
     print(f"\n Pipeline complete.\n  Frames: {images_dir}\n  Poses:  {outputs_root}/*/outputs/object_data.json\n  Video:  {final_video}")
